@@ -91,7 +91,7 @@ return [
                 'exchange' => [
                     'name' => env('RABBITMQ_EXCHANGE_NAME'),
                     'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
-                    'type' => env('RABBITMQ_EXCHANGE_TYPE', \Interop\Amqp\AmqpTopic::TYPE_DIRECT),
+                    'type' => env('RABBITMQ_EXCHANGE_TYPE', 'direct'),
                     'passive' => env('RABBITMQ_EXCHANGE_PASSIVE', false),
                     'durable' => env('RABBITMQ_EXCHANGE_DURABLE', true),
                     'auto_delete' => env('RABBITMQ_EXCHANGE_AUTODELETE', false),

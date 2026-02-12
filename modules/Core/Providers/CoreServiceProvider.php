@@ -13,7 +13,7 @@ use Modules\Core\Exceptions\CoreHandler;
 use Modules\Core\Listeners\BuildCoreSidebarListener;
 use Modules\Core\Supports\CustomResourceRegistrar;
 use Modules\Core\Traits\RegisterDataTrait;
-use Maatwebsite\Sidebar\SidebarServiceProvider as PackageSidebarServiceProvider;
+// use Maatwebsite\Sidebar\SidebarServiceProvider as PackageSidebarServiceProvider;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -58,8 +58,8 @@ class CoreServiceProvider extends ServiceProvider
             return new CustomResourceRegistrar($app[Router::class]);
         });
         $this->app->register(RouteServiceProvider::class);
-        $this->app->register(PackageSidebarServiceProvider::class);
-        $this->app->register(SidebarServiceProvider::class);
+        // $this->app->register(PackageSidebarServiceProvider::class); // Removed: Package not Laravel 12 compatible
+        // $this->app->register(SidebarServiceProvider::class); // Removed: Depends on maatwebsite/laravel-sidebar
         $this->app->singleton(ExceptionHandler::class, CoreHandler::class);
 
         $this->app['events']->listen(
