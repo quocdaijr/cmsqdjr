@@ -6,40 +6,41 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
-        "elasticsearch/elasticsearch": "^7.14",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "intervention/image": "^2.6",
+        "intervention/image": "^3.0",
         "jeremykenedy/laravel-logger": "^5.0",
         "laravel/framework": "^12.0",
-        "laravel/horizon": "^5.7",
-        "laravel/telescope": "^4.6",
-        "laravel/tinker": "^2.5",
-        "laravelcollective/html": "^6.2",
-        "league/flysystem-aws-s3-v3": "^1.0",
-        "league/flysystem-cached-adapter": "^1.1",
-        "mcamara/laravel-localization": "^1.6",
-        "nwidart/laravel-modules": "^8.2",
+        "laravel/horizon": "^5.28",
+        "laravel/telescope": "^5.0",
+        "laravel/tinker": "^2.10",
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "mcamara/laravel-localization": "^2.0",
+        "nwidart/laravel-modules": "^11.0",
+        "predis/predis": "^2.2",
         "quocdaijr/administration": "*@dev",
         "quocdaijr/category": "*@dev",
         "quocdaijr/core": "*@dev",
         "quocdaijr/dashboard": "*@dev",
         "quocdaijr/file": "*@dev",
-        "quocdaijr/laravel-elasticsearch": "*@dev",
         "quocdaijr/post": "*@dev",
         "quocdaijr/tag": "*@dev",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^11.3"
+        "spatie/laravel-permission": "^6.0",
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^13.0"
+    },
+    "suggest": {
+        "elasticsearch/elasticsearch": "^8.0 - Optional, for better search performance",
+        "quocdaijr/laravel-elasticsearch": "*@dev - Optional, Elasticsearch integration (update to Laravel 12 required)",
+        "laravelcollective/html": "^6.4 - Form/HTML helpers (Laravel 10 max, update needed for Laravel 12)"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.10",
-        "barryvdh/laravel-debugbar": "^3.6",
-        "facade/ignition": "^2.5",
-        "fakerphp/faker": "^1.9.1",
-        "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
-        "orchestra/testbench": "^6.22",
-        "phpunit/phpunit": "^9.3.3"
+        "barryvdh/laravel-debugbar": "^3.14",
+        "barryvdh/laravel-ide-helper": "^3.0",
+        "fakerphp/faker": "^1.23",
+        "mockery/mockery": "^1.6",
+        "nunomaduro/collision": "^8.0",
+        "orchestra/testbench": "^10.0",
+        "phpunit/phpunit": "^11.0",
+        "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -82,7 +83,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "wikimedia/composer-merge-plugin": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

@@ -4,7 +4,8 @@ namespace Modules\File\Http\Controllers\Api;
 
 use File;
 use Illuminate\Contracts\Filesystem\Factory;
-use Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Modules\File\Services\FileService;
 
 class ResizeController
@@ -29,23 +30,31 @@ class ResizeController
 
         $resizedPath = 'i/' . $size . '/' . $imagePath;
 
-//        if ($this->disk->exists($resizedPath))
-//            return Image::make($this->disk->path($resizedPath))->response();
+        // Create ImageManager instance
+        $manager = new ImageManager(new Driver());
+
+//        if ($this->disk->exists($resizedPath)) {
+//            $image = $manager->read($this->disk->path($resizedPath));
+//            return response($image->encode(), 200)->header('Content-Type', $this->disk->mimeType($resizedPath));
+//        }
 
         $savedDir = dirname($resizedPath);
         if (!$this->disk->exists($savedDir)) {
             $this->disk->makeDirectory($savedDir);
         }
 
-        list($width, $height) = explode('x', strtolower($size));//$sizes[$size];
+        list($width, $height) = explode('x', strtolower($size));
 
-        $image = Image::make($this->disk->path($imagePath))->resize($width, $height);
+        // Read and resize image with new API
+        $image = $manager->read($this->disk->path($imagePath));
+        $image->scale(width: (int)$width, height: (int)$height);
 
         $this->disk->put($resizedPath, $image->encode(), [
             'visibility' => 'public',
             'mimetype' => $this->disk->mimeType($imagePath),
         ]);
 
-        return $image->response();
+        // Return image response
+        return response($image->encode(), 200)->header('Content-Type', $this->disk->mimeType($imagePath));
     }
 }

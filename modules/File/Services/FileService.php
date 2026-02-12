@@ -6,7 +6,8 @@ use Auth;
 use File;
 use Illuminate\Contracts\Filesystem\Factory;
 use Illuminate\Http\UploadedFile;
-use Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Modules\Core\Constants\CoreConstant;
 use Modules\File\Constants\FileConstant;
 use Modules\File\Jobs\ResizeImage;
@@ -87,6 +88,9 @@ class FileService
     {
         try {
             if (!empty($path) && $this->disk->exists($path)) {
+                // Create ImageManager instance with GD driver
+                $manager = new ImageManager(new Driver());
+
                 foreach ((array)$this->getSizes() as $name => $size) {
                     list($width, $height) = $size;
                     $resizePath = $this->getResizeFolderName() . DIRECTORY_SEPARATOR . $name
@@ -95,14 +99,15 @@ class FileService
                         list($rawWidth, $rawHeight) = getimagesize($this->disk->url($path));
                         $resizeWidth = ($rawWidth < $width) ? $rawWidth : $width;
                         $resizeHeight = ($rawHeight < $height) ? $rawHeight : $height;
-                        if ($resizeWidth > $resizeHeight)
-                            $image = Image::make($this->disk->url($path))->resize($resizeWidth, null, function ($constraint) {
-                                $constraint->aspectRatio();
-                            });
-                        else
-                            $image = Image::make($this->disk->url($path))->resize(null, $resizeHeight, function ($constraint) {
-                                $constraint->aspectRatio();
-                            });
+
+                        // Read image and scale maintaining aspect ratio
+                        $image = $manager->read($this->disk->url($path));
+                        if ($resizeWidth > $resizeHeight) {
+                            $image->scale(width: $resizeWidth);
+                        } else {
+                            $image->scale(height: $resizeHeight);
+                        }
+
                         $this->disk->put($resizePath, $image->encode(), [
                             'visibility' => 'public',
                             'mimetype' => $this->disk->mimeType($path),
