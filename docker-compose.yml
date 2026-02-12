@@ -1,5 +1,14 @@
 version: '3.8'
+
+# CmsQDJr v2.0 Docker Services
+# Minimal Setup: Nginx + PHP 8.4 + MySQL + Redis (4 services)
+# Full Setup: Add Elasticsearch 8.x and/or RabbitMQ (optional)
+
 services:
+    # ============================================
+    # REQUIRED SERVICES (Minimal Setup)
+    # ============================================
+
     lar_nginx:
         image: nginx:alpine
         container_name: lar_nginx
@@ -31,17 +40,45 @@ services:
             - 4.4.4.4
         network_mode: "host"
 
-#    lar_rabbitmq:
-#        image: quocdaijr/rabbitmq:3.8.19
-#        container_name: lar_rabbitmq
-#        volumes:
-#            - './docker/rabbitmq/logs:/var/log/rabbitmq/log'
+    # ============================================
+    # OPTIONAL SERVICES (Commented by default)
+    # ============================================
+    # Uncomment services below based on your needs:
+    # - Elasticsearch: For better search performance (set ELASTICSEARCH_ENABLED=true in .env)
+    # - RabbitMQ: For high-volume queue processing (set QUEUE_CONNECTION=rabbitmq in .env)
+
+    # Elasticsearch 8.x (OPTIONAL - for better search performance)
+    # Uncomment only if ELASTICSEARCH_ENABLED=true in .env
+#    lar_elasticsearch8:
+#        image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+#        container_name: lar_elasticsearch8
 #        environment:
-#            RABBITMQ_DEFAULT_USER: admin
-#            RABBITMQ_DEFAULT_PASS: 12345@
+#            - discovery.type=single-node
+#            - xpack.security.enabled=false
+#            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+#        volumes:
+#            - ./docker/elasticsearch8/data:/usr/share/elasticsearch/data
 #        expose:
-#            - 15672
-#            - 5672
+#            - 9200
+#            - 9300
+#        dns:
+#            - 8.8.8.8
+#            - 4.4.4.4
+#        network_mode: "host"
+
+    # RabbitMQ 3.13 (OPTIONAL - for high-volume queue processing)
+    # Uncomment only if QUEUE_CONNECTION=rabbitmq in .env
+#    lar_rabbitmq:
+#        image: rabbitmq:3.13-management-alpine
+#        container_name: lar_rabbitmq
+#        environment:
+#            RABBITMQ_DEFAULT_USER: guest
+#            RABBITMQ_DEFAULT_PASS: guest
+#        volumes:
+#            - './docker/rabbitmq/data:/var/lib/rabbitmq'
+#        expose:
+#            - 5672   # AMQP port
+#            - 15672  # Management UI
 #        dns:
 #            - 8.8.8.8
 #            - 4.4.4.4
@@ -63,22 +100,6 @@ services:
             - 8.8.8.8
             - 4.4.4.4
         network_mode: "host"
-
-#    lar_elasticsearch7:
-#        image: quocdaijr/elasticsearch:7.12.1
-#        container_name: lar_elasticsearch7
-#        volumes:
-#            - ./docker/elasticsearch7/data:/usr/share/elasticsearch/data
-#        environment:
-#            - discovery.type=single-node
-#        #      - ELASTICSEARCH_HEAP_SIZE=1g
-#        expose:
-#            - 9200
-#            - 9300
-#        dns:
-#            - 8.8.8.8
-#            - 4.4.4.4
-#        network_mode: "host"
 
     lar_redis:
         image: redis:7.2-alpine
