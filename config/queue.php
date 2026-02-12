@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', 'sync'),
+    'default' => env('QUEUE_CONNECTION', 'redis'),
 
     /*
     |--------------------------------------------------------------------------
@@ -71,6 +71,7 @@ return [
             'after_commit' => false,
         ],
 
+        // RabbitMQ Queue (OPTIONAL)
         'rabbitmq' => [
             'driver' => 'rabbitmq',
             'queue' => env('RABBITMQ_QUEUE', 'default'),
@@ -80,11 +81,34 @@ return [
                 [
                     'host' => env('RABBITMQ_HOST', '127.0.0.1'),
                     'port' => env('RABBITMQ_PORT', 5672),
-                    'user' => env('RABBITMQ_USER', 'admin'),
-                    'password' => env('RABBITMQ_PASSWORD', '12345@'),
+                    'user' => env('RABBITMQ_USER', 'guest'),
+                    'password' => env('RABBITMQ_PASSWORD', 'guest'),
                     'vhost' => env('RABBITMQ_VHOST', '/'),
                 ],
             ],
+
+            'options' => [
+                'exchange' => [
+                    'name' => env('RABBITMQ_EXCHANGE_NAME'),
+                    'declare' => env('RABBITMQ_EXCHANGE_DECLARE', true),
+                    'type' => env('RABBITMQ_EXCHANGE_TYPE', \Interop\Amqp\AmqpTopic::TYPE_DIRECT),
+                    'passive' => env('RABBITMQ_EXCHANGE_PASSIVE', false),
+                    'durable' => env('RABBITMQ_EXCHANGE_DURABLE', true),
+                    'auto_delete' => env('RABBITMQ_EXCHANGE_AUTODELETE', false),
+                    'arguments' => env('RABBITMQ_EXCHANGE_ARGUMENTS'),
+                ],
+
+                'queue' => [
+                    'declare' => env('RABBITMQ_QUEUE_DECLARE', true),
+                    'bind' => env('RABBITMQ_QUEUE_DECLARE_BIND', true),
+                    'passive' => env('RABBITMQ_QUEUE_PASSIVE', false),
+                    'durable' => env('RABBITMQ_QUEUE_DURABLE', true),
+                    'exclusive' => env('RABBITMQ_QUEUE_EXCLUSIVE', false),
+                    'auto_delete' => env('RABBITMQ_QUEUE_AUTODELETE', false),
+                    'arguments' => env('RABBITMQ_QUEUE_ARGUMENTS'),
+                ],
+            ],
+
             /*
              * Set to "horizon" if you wish to use Laravel Horizon.
              */
@@ -105,9 +129,9 @@ return [
     */
 
     'failed' => [
-//        'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-//        'database' => env('DB_CONNECTION', 'mysql'),
-//        'table' => 'failed_jobs',
+        'driver' => env('QUEUE_FAILED_DRIVER', 'database'),
+        'database' => env('DB_CONNECTION', 'mysql'),
+        'table' => 'failed_jobs',
     ],
 
 ];
