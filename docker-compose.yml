@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.8'
 services:
     lar_nginx:
         image: nginx:alpine
@@ -15,15 +15,15 @@ services:
             - 4.4.4.4
         network_mode: "host"
 
-    lar_php80:
-        image: quocdaijr/php-fpm:8.0
-        container_name: lar_php80
+    lar_php84:
+        image: quocdaijr/php-fpm:8.4
+        container_name: lar_php84
         working_dir: /var/www/html/cmsqdjr
         volumes:
             - '.:/var/www/html/cmsqdjr'
-            - './docker/php80/supervisor/conf.d:/etc/supervisor/conf.d'
-            - './docker/php80/supervisor/logs:/var/log/cache'
-            - './docker/php80/php-fpm/conf.d/php-ini-overrides.ini:/etc/php/8.0/fpm/conf.d/99-overrides.ini'
+            - './docker/php84/supervisor/conf.d:/etc/supervisor/conf.d'
+            - './docker/php84/supervisor/logs:/var/log/cache'
+            - './docker/php84/php-fpm/conf.d/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
         expose:
             - 9000
         dns:
@@ -80,14 +80,14 @@ services:
 #            - 4.4.4.4
 #        network_mode: "host"
 
-#    lar_redis:
-#        image: redis:latest
-#        container_name: lar_redis
-#        volumes:
-#            - './docker/redis/data:/data'
-#        expose:
-#            - 6379
-#        dns:
-#            - 8.8.8.8
-#            - 4.4.4.4
-#        network_mode: "host"
+    lar_redis:
+        image: redis:7.2-alpine
+        container_name: lar_redis
+        volumes:
+            - './docker/redis/data:/data'
+        expose:
+            - 6379
+        dns:
+            - 8.8.8.8
+            - 4.4.4.4
+        network_mode: "host"
