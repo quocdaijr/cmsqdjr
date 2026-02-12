@@ -80,8 +80,10 @@ class PostController extends CoreController
         if (!empty($request->cover))
             $post->files()->attach([$request->cover => ['type' => PostConstant::POST_HAS_FILE_TYPE_COVER]]);
 
-        $job = (new IndexPostElasticsearch($post->id));
-        dispatch($job);
+        // Only index to Elasticsearch if enabled
+        if (config('elasticsearch.enabled')) {
+            dispatch(new IndexPostElasticsearch($post->id));
+        }
 
         return redirect()->route('post.index')->withToastSuccess('Create success');
     }
@@ -176,7 +178,10 @@ class PostController extends CoreController
 
             $this->postRepository->update($id, $data);
 
-            dispatch(new IndexPostElasticsearch($id));
+            // Only index to Elasticsearch if enabled
+            if (config('elasticsearch.enabled')) {
+                dispatch(new IndexPostElasticsearch($id));
+            }
 
             return redirect()->route('post.index')->with('success', 'Update success');
         }
@@ -196,7 +201,10 @@ class PostController extends CoreController
             ];
             $this->postRepository->update($id, $data);
 
-            dispatch(new IndexPostElasticsearch($id));
+            // Only index to Elasticsearch if enabled
+            if (config('elasticsearch.enabled')) {
+                dispatch(new IndexPostElasticsearch($id));
+            }
 
             return redirect()->route('post.index')->with('success', 'Delete success');
         }

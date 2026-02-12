@@ -49,7 +49,9 @@ class TagController extends CoreController
     public function store(CreateTagRequest $request)
     {
         $tag = $this->tagRepository->create($request->all());
-        dispatch(new IndexTagElasticsearch($tag->id));
+        if (config('elasticsearch.enabled')) {
+            dispatch(new IndexTagElasticsearch($tag->id));
+        }
         return redirect()->route('tag.index')->withToastSuccess('Create success');
     }
 
@@ -87,7 +89,9 @@ class TagController extends CoreController
     {
         if ($this->tagRepository->find($id)) {
             $this->tagRepository->update($id, $request->all());
-            dispatch(new IndexTagElasticsearch($id));
+            if (config('elasticsearch.enabled')) {
+                dispatch(new IndexTagElasticsearch($id));
+            }
             return redirect()->route('tag.index')->withToastSuccess('Update success');
         }
         abort(404);
@@ -102,7 +106,9 @@ class TagController extends CoreController
     {
         if ($this->tagRepository->find($id)) {
             $this->tagRepository->delete($id);
-            dispatch(new IndexTagElasticsearch($id));
+            if (config('elasticsearch.enabled')) {
+                dispatch(new IndexTagElasticsearch($id));
+            }
             return redirect()->route('tag.index')->withToastSuccess('Delete success');
         }
         abort(404);
