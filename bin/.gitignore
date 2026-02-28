@@ -1,3 +1,5 @@
 *
 !.gitignore
 !*.example
+!setup-*.sh
+!post-deployment-fixes.sh

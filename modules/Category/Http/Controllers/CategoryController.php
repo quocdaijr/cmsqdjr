@@ -49,7 +49,9 @@ class CategoryController extends CoreController
     public function store(CreateCategoryRequest $request)
     {
         $category = $this->categoryRepository->create($request->all());
-        dispatch(new IndexCategoryElasticsearch($category->id));
+        if (config('elasticsearch.enabled')) {
+            dispatch(new IndexCategoryElasticsearch($category->id));
+        }
         return redirect()->route('category.index')->withToastSuccess('Create success');
     }
 
@@ -87,7 +89,9 @@ class CategoryController extends CoreController
     {
         if ($this->categoryRepository->find($id)) {
             $this->categoryRepository->update($id, $request->all());
-            dispatch(new IndexCategoryElasticsearch($id));
+            if (config('elasticsearch.enabled')) {
+                dispatch(new IndexCategoryElasticsearch($id));
+            }
             return redirect()->route('category.index')->withToastSuccess('Update success');
         }
         abort(404);
@@ -102,7 +106,9 @@ class CategoryController extends CoreController
     {
         if ($this->categoryRepository->find($id)) {
             $this->categoryRepository->delete($id);
-            dispatch(new IndexCategoryElasticsearch($id));
+            if (config('elasticsearch.enabled')) {
+                dispatch(new IndexCategoryElasticsearch($id));
+            }
             return redirect()->route('category.index')->withToastSuccess('Delete success');
         }
         abort(404);

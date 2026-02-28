@@ -9,7 +9,7 @@
     ],
     "require": {
         "quocdaijr/core": "*@dev",
-        "spatie/laravel-permission": "^4.2"
+        "spatie/laravel-permission": "^6.0"
     },
     "extra": {
         "laravel": {
